@@ -11,15 +11,20 @@ import java.util.concurrent.TimeUnit;
 
 public class Main
 {
-    private static final int THREAD_COUNT = 10;
+	//Initializing max number of threads to 10
+    private static final int MaxNoOfThreads = 10;
     
 
+    /* This method reads the file using buffer reader and add them into queue 
+     * which will be processed by the thread pool implemented by executor
+     * framework
+     */
     public static void main( final String[] args ) throws Exception
     {
     	String input = args[0]; 
         WordCount wd = new WordCount();
         Map<String, Integer> wordCounts = new HashMap<>();
-        final Queue<String> dataQueue = new ConcurrentLinkedQueue<>();
+        final Queue<String> wordQueue = new ConcurrentLinkedQueue<>();
         new Thread()
         {
             @Override public void run()
@@ -35,7 +40,7 @@ public class Main
 			            } catch ( IOException e ) {
 			                nextLine = null;
 			            }
-			            dataQueue.add( line );
+			            wordQueue.add( line );
 						
 					}	
 				} catch (FileNotFoundException e) {
@@ -48,14 +53,14 @@ public class Main
 				}
             }
         }.start();
-        while ( dataQueue.isEmpty() ) {
+        while ( wordQueue.isEmpty() ) {
             // Wait for the thread to start writing into the queue
             Thread.sleep( 100 );
         }
-        ExecutorService executorService = Executors.newFixedThreadPool( THREAD_COUNT );
+        ExecutorService executorService = Executors.newFixedThreadPool( MaxNoOfThreads );
         int i = 0;
-        while(i < THREAD_COUNT) {
-//            executorService.execute( new TransformationThread( tr, wordCounts, dataQueue ) );
+        while(i < MaxNoOfThreads) {
+            executorService.execute( new WordThread( wd, wordCounts, wordQueue ) );
         	i++;
         }
         executorService.shutdown();
