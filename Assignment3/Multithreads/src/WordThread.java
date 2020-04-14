@@ -23,20 +23,20 @@ public class WordThread implements Runnable{
      */
     @Override public void run()
     {
-        /*while ( !wordQueue.isEmpty() ) {
+        while ( !wordQueue.isEmpty() ) {
         	int count = 0;
             String line = wordQueue.poll();
             if ( line != null ) {
-                String[] legalWords = wd.filterIllegalTokens(line.split( "[ _\\.,\\-\\+]" ));
+                String[] legalWords = wd.filteredList(line.split( "[ _\\.,\\-\\+]" ));
                 String [] lowerCaseWords = new String[legalWords.length];
                 for ( int i = 0; i < legalWords.length; i++ ) {
                 	lowerCaseWords[i] = legalWords[i].toLowerCase();
 	            }
                 for ( String word : lowerCaseWords ) {
-                    wd.reduce( wordCounters, word, count );
+                    wd.fillingWordCounter( wordCounters, word, count );
                     count++;
                 }
             }
-        }*/
+        }
     }
 }
